@@ -15,7 +15,7 @@ const Createstudent = async function (req, res) {
 
     let { studentName, marks, subject } = data
     let userId = req.params.userId
-
+    data.userId = userId
     if (!userId)
       return res.status(400).send({ status: false, message: 'userId is required' })
 
@@ -73,18 +73,20 @@ const Createstudent = async function (req, res) {
 
 
 
+
 const getDetailsByQuery = async function (req, res) {
   try {
     let data = req.query;
-
+    let userId = req.params.userId
     let filter = { isDeleted: false }
+    filter.userId = userId
 
     if (Object.keys(data).length == 0) {
       let allStudentss = await StudentModel.find(filter).sort({ studentName: 1 })
       if (allStudentss.length == 0) {
         return res.status(404).send({ status: false, message: "No student found" })
       }
-      return res.status(200).send({ status: false, message: "All Students", data: allProducts })
+      return res.status(200).send({ status: false, message: "All Students", data: allStudentss })
     }
 
     let { studentName, subject } = data
@@ -190,7 +192,7 @@ const deleteStudents = async (req, res) => {
       { new: true });
 
   
-    return res.status(200).send({ status: true, message: "Product deleted successfully.", data: deletedStudent });
+    return res.status(200).send({ status: true, message: "student deleted successfully.", data: deletedStudent });
 
   } catch (err) {
     console.log(err)
